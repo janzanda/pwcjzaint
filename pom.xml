@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.pwc.interview</groupId>
-	<artifactId>janzanda</artifactId>
+	<artifactId>pwcjzaint</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>janzanda</name>
+	<name>pwcjzaint</name>
 	<description>Interview task for Jan Zanda</description>
 	<properties>
 		<java.version>11</java.version>
