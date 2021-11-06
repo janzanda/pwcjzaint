@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * POJO used for loading countries from countries.json file.
+ * POJO used for loading countries from countries.json file. Uses only 'cca3' and 'borders' params. Others are not needed.
+ *
+ * @author zandajan
  */
 @Data
 @AllArgsConstructor
@@ -18,7 +20,13 @@ import java.util.List;
 @EqualsAndHashCode
 public class CountryDto {
 
+    /**
+     * Cca3 value from source json.
+     */
     private String cca3;
+    /**
+     * List of borders.
+     */
     private List<String> borders;
 
 }
