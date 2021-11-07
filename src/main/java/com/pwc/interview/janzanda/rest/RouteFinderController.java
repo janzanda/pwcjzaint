@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,7 @@ public class RouteFinderController {
             @ApiResponse(responseCode = "200", description = "Route found."),
             @ApiResponse(responseCode = "400", description = "Route NOT found.", content = @Content)
     })
-    @GetMapping("/routing/{from}/{to}")
+    @GetMapping(path = "/routing/{from}/{to}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<String> findRounte(@Parameter(description = "CCA3 code of country of origin.") @PathVariable("from") String from,
                                    @Parameter(description = "CCA3 code of destination country.") @PathVariable("to") String to) {
         return routeFinderService.getRoute(from, to);
