@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Loads data from countries.json and holds them in graph structure.
@@ -27,13 +28,24 @@ public class CountryGraphHolder {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    /**
+     * Graph containing country codes and their relations.
+     */
     private final Graph<String, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
+
+    /**
+     * Map of impossible routes that should be excluded from the graph.
+     * Quick fix of situation when data are technically correct, but useless for our case.
+     * For example, Kaliningrad enclave, in this case, is RUS, but you cannot route from there to China.
+     * Therefore, we will override creation of this route and do not create the edge between those mapped here.
+     */
+    private final Map<String, String> impossibleRoutes = Map.of("RUS", "POL");
 
     @Value("classpath:countries.json")
     private InputStream jsonFile;
 
     @PostConstruct
-    void init() throws IOException {
+    protected void init() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<CountryDto> countries = objectMapper.readValue(jsonFile, new TypeReference<>() {
         });
@@ -64,7 +76,7 @@ public class CountryGraphHolder {
         if (!graph.containsVertex(v2)) {
             addVertex(v2);
         }
-        if (!graph.containsEdge(v1, v2)) {
+        if (!checkEdgeExcluded(v1, v2) && !graph.containsEdge(v1, v2)) {
             graph.addEdge(v1, v2);
         }
     }
@@ -73,6 +85,10 @@ public class CountryGraphHolder {
         if (!graph.containsVertex(countryCode)) {
             graph.addVertex(countryCode);
         }
+    }
+
+    private boolean checkEdgeExcluded(String v1, String v2) {
+        return v2.equals(impossibleRoutes.get(v1)) || v1.equals(impossibleRoutes.get(v2));
     }
 
 }
